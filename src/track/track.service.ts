@@ -32,9 +32,25 @@ export class TrackService {
     return track;
   }
 
-  async getAll(): Promise<Track[]> {
-    const tracks = await this.trackModel.find();
+  async getAll(count = 10, offset = 0): Promise<Track[]> {
+    const tracks = await this.trackModel.find().skip(offset).limit(count);
     return tracks;
+  }
+
+  async search(query: string): Promise<Track[]> {
+    const tracksByArtist = await this.trackModel.find({
+      artist: {
+        $regex: new RegExp(query, 'i'),
+      },
+    });
+
+    const tracksByName = await this.trackModel.find({
+      name: {
+        $regex: new RegExp(query, 'i'),
+      },
+    });
+
+    return tracksByArtist.concat(tracksByName);
   }
 
   async getOne(id: ObjectId): Promise<Track> {
@@ -56,5 +72,11 @@ export class TrackService {
     await track.save();
 
     return comment;
+  }
+
+  async listen(id: ObjectId) {
+    const track = await this.trackModel.findById(id);
+    track.listens += 1;
+    await track.save();
   }
 }
