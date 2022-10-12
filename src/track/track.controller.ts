@@ -12,7 +12,7 @@ export class TrackController {
 
   @Get()
   getAll() {
-    return 'WORK';
+    return this.trackService.getAll();
   }
 
   getOne() {}
