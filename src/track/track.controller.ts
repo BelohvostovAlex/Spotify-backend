@@ -5,9 +5,9 @@ import {
   Delete,
   Body,
   Param,
-  Query,
   UseInterceptors,
   UploadedFiles,
+  Query,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ObjectId } from 'mongoose';
