@@ -24,6 +24,22 @@ export class TrackService {
     return tracks;
   }
 
+  async search(query: string): Promise<Track[]> {
+    const tracksByArtist = await this.trackModel.find({
+      artist: {
+        $regex: new RegExp(query, 'i'),
+      },
+    });
+
+    const tracksByName = await this.trackModel.find({
+      name: {
+        $regex: new RegExp(query, 'i'),
+      },
+    });
+
+    return tracksByArtist.concat(tracksByName);
+  }
+
   async getOne(id: ObjectId): Promise<Track> {
     const track = await this.trackModel.findById(id).populate('comments');
     return track;
